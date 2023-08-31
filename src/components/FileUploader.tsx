@@ -9,14 +9,17 @@ const FileUploader = () => {
   const onDrop = useCallback((acceptedFiles) => {
     const reader = new FileReader();
 
-    reader.onabort = () => toast('file reading was aborted');
-    reader.onerror = () => toast('file reading has failed');
+    reader.onabort = () => toast.error('File reading was aborted.');
+    reader.onerror = () => toast.error('File reading has failed.');
     reader.onload = () => {
       const dataURL: string | null = typeof reader.result === 'string' ? reader.result : null;
+
       if (dataURL !== null) {
         setFile(dataURL);
-        toast('File uploaded successfully...');
-      } else toast('unable to load file');
+        toast.success('File uploaded successfully...');
+      } else {
+        toast.error('Unable to load file.');
+      }
     };
     reader.readAsDataURL(acceptedFiles[0]);
   }, []);
