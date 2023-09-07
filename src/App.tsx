@@ -7,7 +7,7 @@ function App() {
   return (
     <main className="flex flex-col h-screen w-screen bg-[#f5f5f5] text-black">
       <Navbar />
-      <div className="flex flex-col sm:flex-row justify-between m-4 p-4 h-4/5 sm:h-3/5">
+      <div className="flex flex-col justify-between p-4 m-4 sm:flex-row h-3/5 sm:h-2/5">
         <FileUploader />
         <ScoreCard />
       </div>
