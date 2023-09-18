@@ -1,28 +1,36 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { optimizer } from '../utils/fileOptimizer';
 
 const FileUploader = () => {
   type UploadedFile = {
     fileName: string | null;
     imageData: string;
+    newImageData: string;
   };
 
-  const [file, setFile] = useState<UploadedFile>({ fileName: null, imageData: '' });
+  const [file, setFile] = useState<UploadedFile>({
+    fileName: null,
+    imageData: '',
+    newImageData: '',
+  });
 
   const onDrop = useCallback(
-    (acceptedFiles) => {
+    async (acceptedFiles) => {
       const reader = new FileReader();
 
       reader.onabort = () => toast.error('File reading was aborted.');
       reader.onerror = () => toast.error('File reading has failed.');
-      reader.onload = () => {
+      reader.onloadend = async () => {
         const dataURL: string | null = typeof reader.result === 'string' ? reader.result : null;
 
         if (dataURL !== null) {
-          setFile({ fileName: acceptedFiles[0].name, imageData: dataURL });
+          setFile({ fileName: acceptedFiles[0].name, imageData: dataURL, newImageData: '' });
           toast.success('File uploaded successfully! Starting analysis...');
+          let newImageData = await optimizer(dataURL);
+          setFile({ fileName: acceptedFiles[0].name, imageData: dataURL, newImageData: newImageData });
         } else {
           toast.error('Unable to load file.');
         }
@@ -36,16 +44,24 @@ const FileUploader = () => {
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
   return (
-    <div className="flex flex-col h-[49%] sm:h-full w-full sm:w-[49%] justify-center">
+    <div className="flex h-[49%] w-full flex-col justify-center sm:h-full sm:w-[49%]">
       <div
-        className="flex w-full h-full items-center justify-center border-[1px] border-gray-400 border-dashed 
-          rounded-md hover:bg-gray-200 transition-all duration-150 ease-in-out cursor-pointer"
+        className="flex h-full w-full cursor-pointer items-center justify-center rounded-md border-[1px] 
+          border-dashed border-gray-400 transition-all duration-150 ease-in-out hover:bg-gray-200"
         {...getRootProps()}
       >
         <input {...getInputProps()} />
         {file.imageData !== '' ? (
           <div className="flex flex-col items-center justify-center w-full h-full">
-            <img src={file.imageData} className="block max-w-[90%] max-h-[90%] w-auto h-auto" />
+            <div className="flex flex-row items-center justify-center w-full h-full">
+              <img src={file.imageData} className="block h-auto max-h-[90%] w-auto max-w-[90%]" />
+              {file.newImageData !== '' ?? (
+                <img
+                  src={file.newImageData}
+                  className="block h-auto max-h-[40%] w-auto max-w-[40%]"
+                />
+              )}
+            </div>
             <p className="text-sm text-gray-400">{file.fileName}</p>
           </div>
         ) : (
@@ -60,7 +76,6 @@ const FileUploader = () => {
           closeOnClick={false}
           pauseOnFocusLoss={false}
           pauseOnHover={true}
-          // theme="colored"
         />
       </div>
     </div>
