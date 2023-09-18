@@ -17,29 +17,30 @@ const FileUploader = () => {
     newImageData: '',
   });
 
-  const onDrop = useCallback(
-    async (acceptedFiles) => {
-      const reader = new FileReader();
+  const onDrop = useCallback(async (acceptedFiles) => {
+    const reader = new FileReader();
 
-      reader.onabort = () => toast.error('File reading was aborted.');
-      reader.onerror = () => toast.error('File reading has failed.');
-      reader.onloadend = async () => {
-        const dataURL: string | null = typeof reader.result === 'string' ? reader.result : null;
+    reader.onabort = () => toast.error('File reading was aborted.');
+    reader.onerror = () => toast.error('File reading has failed.');
+    reader.onloadend = async () => {
+      const dataURL: string | null = typeof reader.result === 'string' ? reader.result : null;
 
-        if (dataURL !== null) {
-          setFile({ fileName: acceptedFiles[0].name, imageData: dataURL, newImageData: '' });
-          toast.success('File uploaded successfully! Starting analysis...');
-          let newImageData = await optimizer(dataURL);
-          setFile({ fileName: acceptedFiles[0].name, imageData: dataURL, newImageData: newImageData });
-        } else {
-          toast.error('Unable to load file.');
-        }
-      };
+      if (dataURL !== null) {
+        setFile({ fileName: acceptedFiles[0].name, imageData: dataURL, newImageData: '' });
+        toast.success('File uploaded successfully! Starting analysis...');
+        let newImageData = await optimizer(dataURL);
+        setFile({
+          fileName: acceptedFiles[0].name,
+          imageData: dataURL,
+          newImageData: newImageData,
+        });
+      } else {
+        toast.error('Unable to load file.');
+      }
+    };
 
-      reader.readAsDataURL(acceptedFiles[0]);
-    },
-    [file]
-  );
+    reader.readAsDataURL(acceptedFiles[0]);
+  }, []);
 
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
@@ -52,15 +53,20 @@ const FileUploader = () => {
       >
         <input {...getInputProps()} />
         {file.imageData !== '' ? (
-          <div className="flex flex-col items-center justify-center w-full h-full">
-            <div className="flex flex-row items-center justify-center w-full h-full">
-              <img src={file.imageData} className="block h-auto max-h-[90%] w-auto max-w-[90%]" />
-              {file.newImageData !== '' ?? (
+          <div className="flex h-full w-full flex-col items-center justify-center">
+            <div className="flex h-full w-full flex-row items-center justify-center">
+              <img
+                alt="Original Image"
+                src={file.imageData}
+                className="block h-auto max-h-[90%] w-auto max-w-[90%]"
+              />
+              {file.newImageData !== '' ? (
                 <img
+                  alt="New Image"
                   src={file.newImageData}
-                  className="block h-auto max-h-[40%] w-auto max-w-[40%]"
+                  className="block h-auto max-h-[70%] w-auto max-w-[70%]"
                 />
-              )}
+              ) : null}
             </div>
             <p className="text-sm text-gray-400">{file.fileName}</p>
           </div>
