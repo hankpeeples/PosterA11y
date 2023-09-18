@@ -20,8 +20,14 @@ const FileUploader = () => {
   const onDrop = useCallback(async (acceptedFiles) => {
     const reader = new FileReader();
 
-    reader.onabort = () => toast.error('File reading was aborted.');
-    reader.onerror = () => toast.error('File reading has failed.');
+    reader.onabort = (err) => {
+      console.error(err);
+      toast.error('File reading was aborted.');
+    };
+    reader.onerror = (err) => {
+      console.error(err);
+      toast.error('File reading has failed.');
+    };
     reader.onloadend = async () => {
       const dataURL: string | null = typeof reader.result === 'string' ? reader.result : null;
 
@@ -35,6 +41,7 @@ const FileUploader = () => {
           newImageData: newImageData,
         });
       } else {
+        console.error('dataURL is null, unable to load');
         toast.error('Unable to load file.');
       }
     };
