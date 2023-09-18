@@ -1,5 +1,5 @@
 const ExplanationCard = () => {
-  return <div className="m-4 p-4 self-center">ExplanationCard</div>;
+  return <div className="self-center p-4 m-4">ExplanationCard</div>;
 };
 
 export default ExplanationCard;
