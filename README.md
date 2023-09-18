@@ -2,8 +2,8 @@
 
 ### How to run
 
-- `pnpm i` to install needed dependencies
-- `pnpm run dev` to start dev server on localhost:3000
+- `npm i` to install needed dependencies
+- `npm run dev` to start dev server on localhost:3000
 
 ### Project Checklist
 
