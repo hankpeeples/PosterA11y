@@ -32,9 +32,13 @@ const FileUploader = () => {
       const dataURL: string | null = typeof reader.result === 'string' ? reader.result : null;
 
       if (dataURL !== null) {
-        setFile({ fileName: acceptedFiles[0].name, imageData: dataURL, newImageData: '' });
+        setFile({
+          fileName: acceptedFiles[0].name,
+          imageData: dataURL,
+          newImageData: '',
+        });
         toast.success('File uploaded successfully! Starting analysis...');
-        let newImageData = await optimizer(dataURL);
+        let newImageData = await optimizer(dataURL, acceptedFiles[0].name);
         setFile({
           fileName: acceptedFiles[0].name,
           imageData: dataURL,
