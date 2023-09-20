@@ -1,16 +1,18 @@
 // import { Image } from 'image-js';
 
-export const optimizer = async (image: string): Promise<string> => {
+export const optimizer = async (image: string, fileName: string | null): Promise<string> => {
   return new Promise(async (resolve, reject) => {
     try {
-      let res = await fetch('http://localhost:3001/api/v1/processPoster', {
+      let res = await fetch('http://localhost:3001/api/v1/optimize', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
         },
-        body: JSON.stringify({ image }),
+        body: JSON.stringify({ image, fileName }),
       });
       const newImage = await res.json();
+      console.log(newImage);
       resolve(newImage);
     } catch (err) {
       reject(err);
