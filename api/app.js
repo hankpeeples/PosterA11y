@@ -13,20 +13,21 @@ app.use(express.urlencoded({ limit: '10mb', extended: true, parameterLimit: 5000
 app.use(cors());
 
 app.post('/api/v1/optimize', async (req, res) => {
-  const imgBuffer = new Uint8Array(Buffer.from(req.body.image));
+  const regex = new RegExp(`^data:.*?;base64,`, 'gi');
+  const imgBuffer = new Buffer.from(req.body.image.replace(regex, ''), 'base64url');
   const filePath = './' + req.body.fileName;
   fs.writeFile(filePath, imgBuffer, (err) => {
     if (err) res.json({ error: err });
-    console.log('The file has been saved!');
+    console.log(`Saved ${filePath}`);
   });
-  // const newImage = await optimizeIncomingImage(filePath);
-  // if (newImage.error) {
-  //   res.json({ error: newImage.error });
-  // } else {
-  //   res.json({
-  //     newImage,
-  //   });
-  // }
+  const newImage = await optimizeIncomingImage(filePath);
+  if (newImage.error) {
+    res.json({ error: newImage.error });
+  } else {
+    res.json({
+      newImage,
+    });
+  }
 });
 
 const port = process.env.PORT || 3001;

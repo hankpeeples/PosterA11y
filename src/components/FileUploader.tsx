@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -82,9 +82,7 @@ const FileUploader = () => {
             <p className="text-sm text-gray-400">{file.fileName}</p>
           </div>
         ) : (
-          <p className="font-semibold text-gray-400">
-            Drag 'n' drop a file here, or click to select file
-          </p>
+          <p className="font-semibold text-gray-400">Click to select file</p>
         )}
         <ToastContainer
           position="bottom-right"
