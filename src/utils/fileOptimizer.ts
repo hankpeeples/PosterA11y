@@ -11,9 +11,8 @@ export const optimizer = async (image: string, fileName: string | null): Promise
         },
         body: JSON.stringify({ image, fileName }),
       });
-      const newImage = await res.json();
-      console.log(newImage);
-      resolve(newImage);
+      const ret = await res.json();
+      resolve(ret.newImage);
     } catch (err) {
       reject(err);
     }
