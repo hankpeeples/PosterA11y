@@ -20,14 +20,17 @@ const FileUploader = () => {
   const onDrop = useCallback(async (acceptedFiles) => {
     const reader = new FileReader();
 
+    // if FileReader aborts
     reader.onabort = (err) => {
       console.error(err);
       toast.error('File reading was aborted.');
     };
+    // if FileReader errors while reading
     reader.onerror = (err) => {
       console.error(err);
       toast.error('File reading has failed.');
     };
+    // once FileReader is done reading file contents
     reader.onloadend = async () => {
       const dataURL: string | null = typeof reader.result === 'string' ? reader.result : null;
 
@@ -50,6 +53,7 @@ const FileUploader = () => {
       }
     };
 
+    // read file as data URL and will trigger one of the above 'reader.on*'
     reader.readAsDataURL(acceptedFiles[0]);
   }, []);
 
