@@ -1,9 +1,7 @@
-// import { Image } from 'image-js';
-
 export const optimizer = async (image: string, fileName: string | null): Promise<string> => {
   return new Promise(async (resolve, reject) => {
     try {
-      let res = await fetch('http://localhost:3001/api/v1/optimize', {
+      let res = await fetch('http://localhost:3001/api/v1/analyze', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
