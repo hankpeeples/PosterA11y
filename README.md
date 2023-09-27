@@ -4,6 +4,7 @@
 
 - `npm i` to install needed dependencies
 - `npm run dev` to start dev server on localhost:3000
+- `node api/app.js` to start API server
 
 ### Project Checklist
 
