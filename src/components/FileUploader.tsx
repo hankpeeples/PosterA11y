@@ -3,6 +3,7 @@ import { useDropzone } from 'react-dropzone';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { optimizer } from '../utils/fileOptimizer';
+import TestImageDisplay from './testImageDisplay';
 
 const FileUploader = () => {
   type UploadedFile = {
@@ -75,15 +76,7 @@ const FileUploader = () => {
                 src={file.imageData}
                 className="block h-auto max-h-[90%] w-auto max-w-[90%]"
               />
-              {file.newImageData !== '' ? (
-                <img
-                  alt="New Image"
-                  src={file.newImageData}
-                  className="block h-auto max-h-[70%] w-auto max-w-[70%]"
-                />
-              ) : null}
             </div>
-            <p className="text-sm text-gray-400">{file.fileName}</p>
           </div>
         ) : (
           <p className="font-semibold text-gray-400">Click to select file</p>
@@ -97,6 +90,10 @@ const FileUploader = () => {
           pauseOnHover={true}
         />
       </div>
+      <p className="text-sm text-gray-400">
+        Filename: {file.fileName !== '' ? file.fileName : null}
+      </p>
+      <TestImageDisplay image={file.newImageData} />
     </div>
   );
 };
