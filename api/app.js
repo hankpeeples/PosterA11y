@@ -10,7 +10,7 @@ const app = express();
 
 app.use(express.json({ limit: '10mb', extended: true }));
 app.use(express.urlencoded({ limit: '10mb', extended: true, parameterLimit: 50000 }));
-app.use(cors({ origin: 'localhost:3000' }));
+app.use(cors({ origin: ['localhost:3000', 'localhost:3001'] }));
 
 app.post('/api/v1/analyze', async (req, res) => {
   const regex = new RegExp(`^data:.*?;base64,`, 'gi');
@@ -21,15 +21,17 @@ app.post('/api/v1/analyze', async (req, res) => {
   await fs.writeFile(filePath, imgBuffer);
   console.log(`Saved ${filePath}`);
   // run optimizations
-  const newImage = await optimizeImage(filePath);
-
-  if (newImage.error) {
-    res.json({ error: newImage.error });
-  } else {
-    res.json({
-      newImage,
-    });
+  console.log(filePath);
+  let newImage = '';
+  try {
+    newImage = await optimizeImage(filePath);
+  } catch (err) {
+    res.json({ err });
   }
+
+  res.json({
+    newImage,
+  });
 });
 
 const port = process.env.PORT || 3001;
