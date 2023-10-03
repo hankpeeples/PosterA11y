@@ -1,4 +1,3 @@
-// import Jimp from 'jimp';
 import util from 'node:util';
 import { exec } from 'node:child_process';
 import fs from 'node:fs/promises';
@@ -10,6 +9,8 @@ import fs from 'node:fs/promises';
  *    - Add image borders
  *    - Image blur (noise), threshold, contrast
  *    - Remove transparency (image alpha)
+ *
+ *    'convert' is using the ImageMagic command line tool
  */
 const execProm = util.promisify(exec);
 
@@ -26,13 +27,14 @@ const optimizeImage = async (path) => {
       `convert ${path} -set colorspace Gray -separate -average -sharpen 0x3.0 ${path}`
     );
     // remove noise
-    await execProm(`./denoise -m mean ${path} ${path}`);
+    await execProm(
+      `convert ${path} -fuzz 10% -fill Black -opaque Black -define quantum:format=floating-point -depth 32 ${path}`
+    );
+    // chain enhance
+    await execProm(
+      `convert ${path} -enhance -enhance -enhance -enhance -enhance -enhance -enhance -enhance ${path}`
+    );
 
-    const { stdout } = await execProm(`identify -verbose ${path}`);
-
-    console.log(stdout);
-
-    // const jimpImg = await Jimp.read(path);
     const newImg = await fs.readFile(path, 'base64');
     const ext = path.slice(path.lastIndexOf('.'));
 
