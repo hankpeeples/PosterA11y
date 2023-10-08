@@ -15,6 +15,41 @@ import getText from './getText.js';
 
 const boxColors = ['red', 'blue', 'green', 'orange', 'yellow', 'purple'];
 
+const startProcessing = async (path) => {
+  try {
+    // run color contrast checker
+
+    // optimize initial image
+    await optimizeImage(path);
+
+    const optImage = await readFile(path);
+    // doing getText here so I can draw on it after
+    const { text, bbox } = await getText(optImage);
+
+    // draw result boxes
+    const clen = boxColors.length - 1;
+    let i = 0;
+
+    for (let box of bbox) {
+      execSync(
+        `convert ${path} -fill none -stroke ${boxColors[i]} -strokewidth 2 -draw "rectangle ${box.x0},${box.y0} ${box.x1},${box.y1}" ${path}`
+      );
+      i++;
+      if (i > clen) i = 0;
+    }
+
+    const newImage = await readFile(path);
+
+    // image has been read from file system, can delete it now
+    await fs.unlink(path);
+
+    return newImage;
+  } catch (err) {
+    console.log('startProcessing():', err);
+    return { err };
+  }
+};
+
 const optimizeImage = async (path) => {
   try {
     // set dpi to 600
@@ -31,32 +66,8 @@ const optimizeImage = async (path) => {
     );
     // add 10px white border
     execSync(`convert ${path} -bordercolor White -border 10x10 ${path}`);
-
-    const optImage = await readFile(path);
-    // doing getText here so I can draw on it after
-    const { text, bbox } = await getText(optImage);
-
-    const clen = boxColors.length - 1;
-    let i = 0;
-
-    for (let box of bbox) {
-      execSync(
-        `convert ${path} -fill none -stroke ${boxColors[i]} -strokewidth 2 -draw "rectangle ${box.x0},${box.y0} ${box.x1},${box.y1}" ${path}`
-      );
-      i++;
-      if (i > clen) i = 0;
-    }
-
-    const newImage = await readFile(path);
-
-    // image has been read from file system, can delete it now
-    await fs.unlink(path);
-    console.log(`Removed ${path}`);
-
-    return newImage;
   } catch (err) {
-    console.error('optimizeIncomingImage():', err.message);
-    return { error: 'optimizeIncomingImage(): ' + err.message };
+    console.error('optimizeImage():', err.message);
   }
 };
 
@@ -66,4 +77,4 @@ const readFile = async (path) => {
   return `data:image/${ext};base64,${newImg}`;
 };
 
-export default optimizeImage;
+export default startProcessing;
