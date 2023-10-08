@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { optimizer } from '../utils/fileOptimizer';
+import { fetchImageAnalysis } from '../utils/fileFetchHelper';
 import TestImageDisplay from './testImageDisplay';
 
 const FileUploader = () => {
@@ -42,7 +42,7 @@ const FileUploader = () => {
           newImageData: '',
         });
         toast.success('File uploaded successfully! Starting analysis...');
-        let newImageData = await optimizer(dataURL, acceptedFiles[0].name);
+        let newImageData = await fetchImageAnalysis(dataURL, acceptedFiles[0].name);
         setFile({
           fileName: acceptedFiles[0].name,
           imageData: dataURL,
@@ -63,14 +63,13 @@ const FileUploader = () => {
   return (
     <div className="flex h-[49%] w-full flex-col justify-center sm:h-full sm:w-[49%]">
       <div
-        className="flex h-full w-full cursor-pointer items-center justify-center rounded-md border-[1px] 
-          border-dashed border-gray-400 transition-all duration-150 ease-in-out hover:bg-gray-200"
+        className="flex justify-center items-center w-full h-full rounded-md border-gray-400 border-dashed transition-all duration-150 ease-in-out cursor-pointer hover:bg-gray-200 border-[1px]"
         {...getRootProps()}
       >
         <input {...getInputProps()} />
         {file.imageData !== '' ? (
-          <div className="flex h-full w-full flex-col items-center justify-center">
-            <div className="flex h-full w-full flex-row items-center justify-center">
+          <div className="flex flex-col justify-center items-center w-full h-full">
+            <div className="flex flex-row justify-center items-center w-full h-full">
               <img
                 alt="Original Image"
                 src={file.imageData}
