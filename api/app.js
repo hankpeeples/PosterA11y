@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 import express from 'express';
 import cors from 'cors';
 import fs from 'node:fs/promises';
-import optimizeImage from './optimizeImage.js';
+import startProcessing from './imageProcessing';
 
 dotenv.config();
 
@@ -24,7 +24,7 @@ app.post('/api/v1/analyze', async (req, res) => {
   console.log(filePath);
   let newImage = '';
   try {
-    newImage = await optimizeImage(filePath);
+    newImage = await startProcessing(filePath);
   } catch (err) {
     res.json({ err });
   }
