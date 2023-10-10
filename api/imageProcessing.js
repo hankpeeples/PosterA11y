@@ -1,42 +1,33 @@
 import { execSync } from 'node:child_process';
 import fs from 'node:fs/promises';
 import getText from './getText.js';
-
-/*
- * OptimizeImage will adjust the following image properties:
- *    - Image DPI
- *    - Image size/resolution
- *    - Add image borders
- *    - Image blur (noise), threshold, contrast
- *    - Remove transparency (image alpha)
- *
- *    'convert' is using the ImageMagic command line tool
- */
+import checkContrast from './checkColorContrast.js';
 
 const boxColors = ['red', 'blue', 'green', 'orange', 'yellow', 'purple'];
 
 const startProcessing = async (path) => {
   try {
     // run color contrast checker
+    await checkContrast(path);
 
     // optimize initial image
-    await optimizeImage(path);
+    // await optimizeImage(path);
 
-    const optImage = await readFile(path);
-    // doing getText here so I can draw on it after
-    const { text, bbox } = await getText(optImage);
+    // const optImage = await readFile(path);
+    // // doing getText here so I can draw on it after
+    // const { text, bbox } = await getText(optImage);
 
-    // draw result boxes
-    const clen = boxColors.length - 1;
-    let i = 0;
+    // // draw result boxes
+    // const clen = boxColors.length - 1;
+    // let i = 0;
 
-    for (let box of bbox) {
-      execSync(
-        `convert ${path} -fill none -stroke ${boxColors[i]} -strokewidth 2 -draw "rectangle ${box.x0},${box.y0} ${box.x1},${box.y1}" ${path}`
-      );
-      i++;
-      if (i > clen) i = 0;
-    }
+    // for (let box of bbox) {
+    //   execSync(
+    //     `convert ${path} -fill none -stroke ${boxColors[i]} -strokewidth 2 -draw "rectangle ${box.x0},${box.y0} ${box.x1},${box.y1}" ${path}`
+    //   );
+    //   i++;
+    //   if (i > clen) i = 0;
+    // }
 
     const newImage = await readFile(path);
 
@@ -50,11 +41,21 @@ const startProcessing = async (path) => {
   }
 };
 
+/*
+ * OptimizeImage will adjust the following image properties:
+ *    - Image DPI
+ *    - Add image border
+ *    - Image blur (noise), threshold, contrast
+ *    - Remove transparency (image alpha), grayscale
+ *
+ *    'convert' is using the ImageMagic command line tool
+ */
+
 const optimizeImage = async (path) => {
   try {
     // set dpi to 600
     execSync(`convert ${path} -units PixelsPerInch -density 600 ${path}`);
-    // convert to greyscale and sharpen
+    // convert to grayscale and sharpen
     execSync(
       `convert ${path} -alpha off -colorspace gray -type grayscale -contrast-stretch 0 -negate \
           -contrast-stretch 1 -compose copy_opacity -opaque none -sharpen 0x1 ${path}`

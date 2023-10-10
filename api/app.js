@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 import express from 'express';
 import cors from 'cors';
 import fs from 'node:fs/promises';
-import startProcessing from './imageProcessing';
+import startProcessing from './imageProcessing.js';
 
 dotenv.config();
 
