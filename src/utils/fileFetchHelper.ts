@@ -1,7 +1,9 @@
+import type { ImgData } from '../components/FileUploader';
+
 export const fetchImageAnalysis = async (
   image: string,
   fileName: string | null
-): Promise<string> => {
+): Promise<ImgData> => {
   return new Promise(async (resolve, reject) => {
     try {
       let res = await fetch('http://localhost:3001/api/v1/analyze', {
@@ -12,8 +14,8 @@ export const fetchImageAnalysis = async (
         },
         body: JSON.stringify({ image, fileName }),
       });
-      const ret = await res.json();
-      resolve(ret.newImage);
+      const ret: ImgData = await res.json();
+      resolve(ret);
     } catch (err) {
       reject(err);
     }
