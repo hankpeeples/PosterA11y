@@ -16,22 +16,19 @@ app.post('/api/v1/analyze', async (req, res) => {
   const regex = new RegExp(`^data:.*?;base64,`, 'gi');
   // make new buffer from file url string
   const imgBuffer = new Buffer.from(req.body.image.replace(regex, ''), 'base64url');
-  const filePath = './' + req.body.fileName;
+  const filePath = req.body.fileName;
   // save buffer/file to fs
   await fs.writeFile(filePath, imgBuffer);
-  console.log(`Saved ${filePath}`);
+  await fs.copyFile(filePath, 'colored-' + filePath);
   // run optimizations
-  console.log(filePath);
-  let newImage = '';
+  let imgProcessed = {};
   try {
-    newImage = await startProcessing(filePath);
+    imgProcessed = await startProcessing(filePath);
   } catch (err) {
     res.json({ err });
   }
 
-  res.json({
-    newImage,
-  });
+  res.json(imgProcessed);
 });
 
 const port = process.env.PORT || 3001;
