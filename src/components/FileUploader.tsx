@@ -5,17 +5,29 @@ import 'react-toastify/dist/ReactToastify.css';
 import { fetchImageAnalysis } from '../utils/fileFetchHelper';
 import TestImageDisplay from './testImageDisplay';
 
+export type ImgData = {
+  contrast: boolean;
+  text: string;
+  newImage: string;
+  palette: string;
+};
+
 const FileUploader = () => {
   type UploadedFile = {
     fileName: string | null;
     imageData: string;
-    newImageData: string;
+    newImageData: ImgData;
   };
 
   const [file, setFile] = useState<UploadedFile>({
     fileName: null,
     imageData: '',
-    newImageData: '',
+    newImageData: {
+      contrast: false,
+      text: '',
+      newImage: '',
+      palette: '',
+    },
   });
 
   const onDrop = useCallback(async (acceptedFiles) => {
@@ -39,14 +51,27 @@ const FileUploader = () => {
         setFile({
           fileName: acceptedFiles[0].name,
           imageData: dataURL,
-          newImageData: '',
+          newImageData: {
+            contrast: false,
+            text: '',
+            newImage: '',
+            palette: '',
+          },
         });
         toast.success('File uploaded successfully! Starting analysis...');
-        let newImageData = await fetchImageAnalysis(dataURL, acceptedFiles[0].name);
+        let { contrast, text, newImage, palette }: ImgData = await fetchImageAnalysis(
+          dataURL,
+          acceptedFiles[0].name
+        );
         setFile({
           fileName: acceptedFiles[0].name,
           imageData: dataURL,
-          newImageData: newImageData,
+          newImageData: {
+            contrast,
+            text,
+            newImage,
+            palette,
+          },
         });
       } else {
         console.error('dataURL is null, unable to load');
@@ -92,7 +117,8 @@ const FileUploader = () => {
       <p className="text-sm text-gray-400">
         Filename: {file.fileName !== '' ? file.fileName : null}
       </p>
-      <TestImageDisplay image={file.newImageData} />
+      <TestImageDisplay image={file.newImageData.newImage} />
+      <TestImageDisplay image={file.newImageData.palette} />
     </div>
   );
 };
