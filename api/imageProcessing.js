@@ -3,38 +3,35 @@ import fs from 'node:fs/promises';
 import getText from './getText.js';
 import checkContrast from './checkColorContrast.js';
 
-const boxColors = ['red', 'blue', 'green', 'orange', 'yellow', 'purple'];
-
 const startProcessing = async (path) => {
+  const ret = {};
   try {
     // run color contrast checker
-    await checkContrast(path);
+    ret.contrast = await checkContrast(path);
 
     // optimize initial image
-    // await optimizeImage(path);
+    await optimizeImage(path);
 
-    // const optImage = await readFile(path);
-    // // doing getText here so I can draw on it after
-    // const { text, bbox } = await getText(optImage);
+    const optImage = await readFile(path);
+    // doing getText here so I can draw on it after
+    const { text, bbox } = await getText(optImage);
+    ret.text = text;
 
-    // // draw result boxes
-    // const clen = boxColors.length - 1;
-    // let i = 0;
+    // draw result boxes
+    for (let box of bbox) {
+      execSync(
+        `convert ${path} -fill none -stroke red -strokewidth 2 -draw "rectangle ${box.x0},${box.y0} ${box.x1},${box.y1}" ${path}`
+      );
+    }
 
-    // for (let box of bbox) {
-    //   execSync(
-    //     `convert ${path} -fill none -stroke ${boxColors[i]} -strokewidth 2 -draw "rectangle ${box.x0},${box.y0} ${box.x1},${box.y1}" ${path}`
-    //   );
-    //   i++;
-    //   if (i > clen) i = 0;
-    // }
-
-    const newImage = await readFile(path);
+    ret.newImage = await readFile(path);
+    ret.palette = await readFile('palette.jpg');
 
     // image has been read from file system, can delete it now
     await fs.unlink(path);
+    await fs.unlink('colored-' + path);
 
-    return newImage;
+    return ret;
   } catch (err) {
     console.log('startProcessing():', err);
     return { err };
