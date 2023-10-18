@@ -14,13 +14,18 @@ const startProcessing = async (path) => {
 
     const optImage = await readFile(path);
     // doing getText here so I can draw on it after
-    const { text, bbox } = await getText(optImage);
+    const { text, Bbox, Gbox } = await getText(optImage);
     ret.text = text;
 
     // draw result boxes
-    for (let box of bbox) {
+    for (let box of Bbox) {
       execSync(
         `convert ${path} -fill none -stroke red -strokewidth 2 -draw "rectangle ${box.x0},${box.y0} ${box.x1},${box.y1}" ${path}`
+      );
+    }
+    for (let box of Gbox) {
+      execSync(
+        `convert ${path} -fill none -stroke green -strokewidth 2 -draw "rectangle ${box.x0},${box.y0} ${box.x1},${box.y1}" ${path}`
       );
     }
 
