@@ -122,3 +122,5 @@ yarn.lock
 
 *.traineddata
 package-lock.json
+
+palette.jpg
