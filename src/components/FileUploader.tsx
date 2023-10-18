@@ -88,7 +88,7 @@ const FileUploader = () => {
               <img
                 alt="Original Image"
                 src={file.imageData}
-                className="block h-auto max-h-[90%] w-auto max-w-[90%]"
+                className="block h-auto max-h-[70%] w-auto max-w-[60%]"
               />
               <p className="text-sm text-gray-400">
                 Filename: {file.fileName !== '' ? file.fileName : null}
