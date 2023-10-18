@@ -1,7 +1,7 @@
 const Navbar = () => {
   return (
-    <div className="flex flex-row w-screen h-fit p-4 shadow-md shadow-[#898989]  bg-gray-300">
-      <h1 className="font-semibold text-xl">PosterA11y</h1>
+    <div className="flex h-fit w-screen flex-row bg-gray-300 p-4 shadow-md shadow-[#898989]">
+      <h1 className="text-xl font-semibold">PosterA11y</h1>
     </div>
   );
 };

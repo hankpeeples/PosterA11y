@@ -1,7 +1,14 @@
-const ScoreCard = () => {
+type Props = {
+  text: string;
+  contrast: boolean;
+};
+
+const ScoreCard = ({ text, contrast }: Props) => {
   return (
-    <div className="flex flex-col border-solid border-[1px] border-black rounded-md h-[49%] sm:h-full w-full sm:w-[49%] justify-center">
+    <div className="flex flex-col justify-center w-full h-full rounded-md border-gray-400 border-dashed border-[1px]">
       <p className="self-center text-black">Score Card</p>
+      <p className="self-center text-black">{text}</p>
+      <p className="self-center text-black">{contrast}</p>
     </div>
   );
 };

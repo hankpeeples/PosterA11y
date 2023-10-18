@@ -1,5 +1,9 @@
 const ExplanationCard = () => {
-  return <div className="self-center p-4 m-4">ExplanationCard</div>;
+  return (
+    <div className="flex h-full w-full self-center rounded-md bg-gray-300 shadow-md shadow-[#898989]">
+      ExplanationCard
+    </div>
+  );
 };
 
 export default ExplanationCard;
