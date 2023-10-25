@@ -8,6 +8,6 @@
 
 ### Project Checklist
 
-- [ ] Optimize image size and resolutions to decrease loading times and improve performance.
-- [ ] Check text spelling, font size, and font color (maybe amount of text as well).
-- [ ] Check color contrast for text on background.
+- [x] Optimize image size and resolutions to decrease loading times and improve performance.
+- [ ] Check text spelling, font size, and font color (maybe amount of text as well). **Update: Font size and color not accessible.**
+- [x] Check color contrast for text on background.
