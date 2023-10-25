@@ -28,7 +28,32 @@ app.post('/api/v1/analyze', async (req, res) => {
     res.json({ err });
   }
 
+  try {
+    let minData = {
+      text: imgProcessed.text,
+      contrast: imgProcessed.contrast,
+    };
+
+    await fs.writeFile('./results.json', new Buffer.from(JSON.stringify(minData), 'utf-8'));
+    console.log('results written');
+  } catch (err) {
+    console.log(err);
+  }
+
   res.json(imgProcessed);
+});
+
+app.get('/api/v1/getScores', async (req, res) => {
+  let ret;
+  try {
+    await fs.unlink('./results.json');
+    const data = await fs.readFile('./results.json', 'utf-8');
+    ret = JSON.parse(data);
+  } catch (err) {
+    res.sendStatus(500);
+    console.log("results.json probably doesn't exist yet:", err.message);
+  }
+  res.json(ret);
 });
 
 const port = process.env.PORT || 3001;

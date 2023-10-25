@@ -8,17 +8,17 @@ const getText = async (image) => {
     },
   });
 
-  let text = [];
   let Bbox = [];
   let Gbox = [];
   try {
     const { data } = await worker.recognize(image, { rotateAuto: true });
     await worker.terminate();
 
+    let text = { len: data.lines.length, good: 0 };
+    let count = 0;
     for (let line of data.lines) {
-      console.log(`[${line.confidence}]: ${line.text}`);
       if (line.confidence > 70) {
-        text.push(line.text);
+        text.good += 1;
         Gbox.push(line.bbox);
       } else {
         Bbox.push(line.bbox);

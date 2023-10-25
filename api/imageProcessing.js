@@ -9,13 +9,12 @@ const startProcessing = async (path) => {
     // run color contrast checker
     ret.contrast = await checkContrast(path);
 
-    // optimize initial image
-    await optimizeImage(path);
-
     const optImage = await readFile(path);
     // doing getText here so I can draw on it after
     const { text, Bbox, Gbox } = await getText(optImage);
     ret.text = text;
+
+    await optimizeImage(path);
 
     // draw result boxes
     for (let box of Bbox) {
@@ -55,20 +54,21 @@ const startProcessing = async (path) => {
 
 const optimizeImage = async (path) => {
   try {
-    // set dpi to 600
-    execSync(`convert ${path} -units PixelsPerInch -density 600 ${path}`);
     // convert to grayscale and sharpen
     execSync(
       `convert ${path} -alpha off -colorspace gray -type grayscale -contrast-stretch 0 -negate \
-          -contrast-stretch 1 -compose copy_opacity -opaque none -sharpen 0x1 ${path}`
+      -contrast-stretch 1 -compose copy_opacity -opaque none -sharpen 0x2 ${path}`
     );
     // remove noise
     execSync(
-      `convert ${path} -fuzz 10% -fill Black -define quantum:format=floating-point -depth 32 \
-        -enhance -enhance ${path}`
+      `convert ${path} -fuzz 15% -fill none -define quantum:format=floating-point -depth 32 \
+        -enhance -enhance -enhance -enhance -enhance -enhance ${path}`
     );
     // add 10px white border
-    execSync(`convert ${path} -bordercolor White -border 10x10 ${path}`);
+    execSync(`convert ${path} -bordercolor White -border 4x4 ${path}`);
+    // set dpi to 600
+    execSync(`convert -units PixelsPerInch ${path} -density 300 ${path}`);
+    execSync(`convert -units PixelsPerInch ${path} -resample 300 ${path}`);
   } catch (err) {
     console.error('optimizeImage():', err.message);
   }
