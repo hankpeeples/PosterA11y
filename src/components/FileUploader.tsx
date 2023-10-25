@@ -13,12 +13,13 @@ const FileUploader = () => {
     fileName: null,
     imageData: '',
     newImageData: {
-      contrast: false,
-      text: '',
+      contrast: 0,
+      text: 0,
       newImage: '',
       palette: '',
     },
   });
+  const [done, setDone] = useState<boolean>(false);
 
   const onDrop = useCallback(async (acceptedFiles) => {
     const reader = new FileReader();
@@ -42,8 +43,8 @@ const FileUploader = () => {
           fileName: acceptedFiles[0].name,
           imageData: dataURL,
           newImageData: {
-            contrast: false,
-            text: '',
+            contrast: 0,
+            text: 0,
             newImage: '',
             palette: '',
           },
@@ -63,6 +64,7 @@ const FileUploader = () => {
             palette,
           },
         });
+        setDone(true);
       } else {
         console.error('dataURL is null, unable to load');
         toast.error('Unable to load file.');
@@ -76,15 +78,15 @@ const FileUploader = () => {
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
   return (
-    <div className="flex flex-col justify-between p-4 w-full h-full">
+    <div className="flex h-full w-full flex-col justify-between p-4">
       <div className="flex h-[45%] w-full grid-cols-1 grid-rows-2 flex-row gap-4">
         <div
-          className="flex justify-center items-center w-full h-full rounded-md border-gray-400 border-dashed transition-all duration-150 ease-in-out cursor-pointer hover:bg-gray-200 border-[1px]"
+          className="flex h-full w-full cursor-pointer items-center justify-center rounded-md border-[1px] border-dashed border-gray-400 transition-all duration-150 ease-in-out hover:bg-gray-200"
           {...getRootProps()}
         >
           <input {...getInputProps()} />
           {file.imageData !== '' ? (
-            <div className="flex flex-col justify-center items-center">
+            <div className="flex flex-col items-center justify-center">
               <img
                 alt="Original Image"
                 src={file.imageData}
@@ -98,15 +100,15 @@ const FileUploader = () => {
             <p className="font-semibold text-gray-400">Click to select file</p>
           )}
         </div>
-        <div className="flex justify-center items-center w-full h-full">
-          <ScoreCard text={file.newImageData.text} contrast={file.newImageData.contrast} />
+        <div className="flex h-full w-full items-center justify-center">
+          <ScoreCard done={done} />
         </div>
       </div>
       <div className="flex h-[48%] w-full grid-cols-1 grid-rows-2 flex-row gap-4">
-        <div className="flex justify-center items-center w-full h-full">
+        <div className="flex h-full w-full items-center justify-center">
           <NewImageDisplay image={file.newImageData.newImage} palette={file.newImageData.palette} />
         </div>
-        <div className="flex justify-center items-center w-full h-full">
+        <div className="flex h-full w-full items-center justify-center">
           <ExplanationCard />
         </div>
       </div>
