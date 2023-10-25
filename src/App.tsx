@@ -1,11 +1,11 @@
-import FileUploader from './components/FileUploader';
+import Home from './components/Home';
 import Navbar from './components/Navbar';
 
 function App() {
   return (
-    <main className="flex h-screen w-screen flex-col bg-[#f5f5f5] text-black">
+    <main className="h-screen w-screen bg-[#f5f5f5] text-black">
       <Navbar />
-      <FileUploader />
+      <Home />
     </main>
   );
 }
