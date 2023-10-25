@@ -1,6 +1,6 @@
 export type ImgData = {
-  contrast: boolean;
-  text: string;
+  contrast: number;
+  text: number;
   newImage: string;
   palette: string;
 };

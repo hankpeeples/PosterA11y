@@ -1,4 +1,4 @@
-import type { ImgData } from '../components/FileUploader';
+import type { ImgData } from './types';
 
 export const fetchImageAnalysis = async (
   image: string,
