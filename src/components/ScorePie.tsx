@@ -5,7 +5,6 @@ type Props = {
   overall?: number;
   textScore?: number;
   contrastScore?: number;
-  done: boolean;
 };
 
 type ScoreData = {
@@ -13,7 +12,7 @@ type ScoreData = {
   data: { x: number; y: number }[];
 };
 
-const ScorePie = ({ overall, textScore, contrastScore, done }: Props) => {
+const ScorePie = ({ overall, textScore, contrastScore }: Props) => {
   let score: number = 0;
 
   if (textScore) score = textScore;
@@ -31,11 +30,10 @@ const ScorePie = ({ overall, textScore, contrastScore, done }: Props) => {
 
   useEffect(() => {
     setScoreData({ grade: score, data: getData(score) });
-    console.log(scoreData.grade);
-  }, [score, done]);
+  }, [score]);
 
   return (
-    <svg viewBox="0 0 400 400" width="100%" height="100%">
+    <svg viewBox="0 0 400 400" width="15rem" height="15rem">
       <VictoryPie
         standalone={false}
         animate={{ duration: 1000 }}
@@ -49,8 +47,8 @@ const ScorePie = ({ overall, textScore, contrastScore, done }: Props) => {
           data: {
             fill: ({ datum }) => {
               let color = '#FF6961';
-              if (datum.y >= 40 && datum.y <= 65) color = '#d8d231';
-              if (datum.y >= 66) color = '#77dd77';
+              if (datum.y >= 40 && datum.y <= 70) color = '#d8d231';
+              if (datum.y >= 71) color = '#77dd77';
               return datum.x === 1 ? color : 'transparent';
             },
           },

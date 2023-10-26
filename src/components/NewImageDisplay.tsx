@@ -5,9 +5,9 @@ type Props = {
 
 const NewImageDisplay = ({ image, palette }: Props) => {
   return (
-    <div className="flex h-full w-full flex-row items-center rounded-md bg-gray-300 p-10 shadow-md shadow-[#898989]">
-      <img src={image} className="block h-auto max-h-[90%] w-auto max-w-[70%]" />
-      <img src={palette} className="block h-auto max-h-[20%] w-auto max-w-[60%] rotate-90" />
+    <div className="mr-4 flex h-full w-full flex-row items-center justify-center overflow-auto rounded-md bg-gray-300 p-4 shadow-md shadow-[#898989]">
+      <img src={image} className="flex w-auto h-auto bg-black" />
+      <img src={palette} className="flex w-auto h-auto rotate-90" />
     </div>
   );
 };
