@@ -1,25 +1,21 @@
+import axios from 'axios';
 import { useCallback, useRef, useState } from 'react';
-import { useDropzone } from 'react-dropzone';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { fetchImageAnalysis } from '../utils/fileFetchHelper';
 import { ImgData, UploadedFile } from '../utils/types';
 
-const FileUploader = () => {
+type Props = {
+  fileSetter: React.Dispatch<React.SetStateAction<UploadedFile>>;
+  file: UploadedFile;
+};
+
+const FileUploader = ({ fileSetter, file }: Props) => {
   const hiddenFileInput = useRef(null);
   const [url, setUrl] = useState<string>('');
-  const [file, setFile] = useState<UploadedFile>({
-    fileName: null,
-    imageData: '',
-    newImageData: {
-      contrast: 0,
-      text: 0,
-      newImage: '',
-      palette: '',
-    },
-  });
 
   const runFileUpload = () => {
+    // @ts-ignore: Possibly null error
     hiddenFileInput.current.click();
   };
 
@@ -45,12 +41,12 @@ const FileUploader = () => {
       const dataURL: string | null = typeof reader.result === 'string' ? reader.result : null;
 
       if (dataURL !== null) {
-        setFile({
+        fileSetter({
           fileName: uploadedImage[0].name,
           imageData: dataURL,
           newImageData: {
             contrast: 0,
-            text: 0,
+            text: { len: 0, good: 0 },
             newImage: '',
             palette: '',
           },
@@ -60,7 +56,7 @@ const FileUploader = () => {
           dataURL,
           uploadedImage[0].name
         );
-        setFile({
+        fileSetter({
           fileName: uploadedImage[0].name,
           imageData: dataURL,
           newImageData: {
@@ -81,17 +77,26 @@ const FileUploader = () => {
   }, []);
 
   const urlInputHandler = async () => {
+    // 'new URL(url)' will error with an invalid URL so just catch to validate
     try {
-      const res = await fetch(url);
+      new URL(url);
+    } catch (_) {
+      toast.error(`"${url}" is not a valid URL.`);
+      return;
+    }
+
+    try {
+      console.log(url);
+      const res = await axios.get(url);
       console.log(res);
       if (res.status === 200) {
         const imageBlob = await res.blob();
-        setFile({
+        fileSetter({
           fileName: 'Uploaded via image URL',
           imageData: URL.createObjectURL(imageBlob),
           newImageData: {
             contrast: 0,
-            text: 0,
+            text: { len: 0, good: 0 },
             newImage: '',
             palette: '',
           },
@@ -101,7 +106,7 @@ const FileUploader = () => {
           file.imageData,
           file.fileName
         );
-        setFile({
+        fileSetter({
           fileName: file.fileName,
           imageData: file.imageData,
           newImageData: {
@@ -113,14 +118,14 @@ const FileUploader = () => {
         });
       }
     } catch (err) {
-      toast.error('That URL does not appear to be valid...');
+      toast.error('Something went wrong when grabbing the image.');
       console.log(err);
     }
   };
 
   return (
     <>
-      <div className="flex h-full w-full flex-row items-center justify-between rounded-md border-[1px] border-dashed border-gray-400 p-4">
+      <div className="flex flex-row justify-between items-center p-4 w-full h-full rounded-md border-gray-400 border-dashed border-[1px]">
         <div className="flex flex-row items-center">
           <input
             type="file"
@@ -132,7 +137,7 @@ const FileUploader = () => {
           />
           <button
             onClick={runFileUpload}
-            className="rounded-md border-[1px] border-black pb-1 pl-2 pr-2 pt-1 shadow-sm shadow-black transition duration-200 ease-in-out hover:shadow-none"
+            className="pt-1 pr-2 pb-1 pl-2 rounded-md border-black shadow-sm transition duration-200 ease-in-out hover:shadow-none border-[1px] shadow-black"
           >
             Choose image...
           </button>
@@ -146,11 +151,11 @@ const FileUploader = () => {
             type="url"
             name="image url uploader"
             onChange={(e) => setUrl(e.target.value)}
-            className="w-[30rem] rounded-md rounded-br-none rounded-tr-none border-[1px] border-black border-r-transparent pb-1 pl-2 pr-2 pt-1 shadow-sm shadow-black transition duration-200 ease-in-out"
+            className="pt-1 pr-2 pb-1 pl-2 rounded-md rounded-tr-none rounded-br-none border-black shadow-sm transition duration-200 ease-in-out w-[30rem] border-[1px] border-r-transparent shadow-black"
           />
           <button
             onClick={urlInputHandler}
-            className="rounded-md rounded-bl-none rounded-tl-none border-[1px] border-black border-l-transparent bg-white pb-1 pl-2 pr-2 pt-1 font-bold text-gray-500 shadow-sm shadow-black transition duration-200 ease-in-out"
+            className="pt-1 pr-2 pb-1 pl-2 font-bold text-gray-500 bg-white rounded-md rounded-tl-none rounded-bl-none border-black shadow-sm transition duration-200 ease-in-out border-[1px] border-l-transparent shadow-black"
           >
             Go
           </button>
