@@ -10,7 +10,14 @@ const app = express();
 
 app.use(express.json({ limit: '10mb', extended: true }));
 app.use(express.urlencoded({ limit: '10mb', extended: true, parameterLimit: 50000 }));
-app.use(cors());
+app.use(
+  cors({
+    origin: true,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    preflightContinue: false,
+    optionsSuccessStatus: 200,
+  })
+);
 
 app.post('/api/v1/analyze', async (req, res) => {
   const regex = new RegExp(`^data:.*?;base64,`, 'gi');
