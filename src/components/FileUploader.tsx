@@ -38,7 +38,7 @@ const FileUploader = ({ fileSetter, file }: Props) => {
     };
     // once FileReader is done reading file contents
     reader.onloadend = async () => {
-      const dataURL: string | null = typeof reader.result === 'string' ? reader.result : null;
+      const dataURL: string = typeof reader.result === 'string' ? reader.result : '';
 
       if (dataURL !== null) {
         fileSetter({
@@ -86,36 +86,50 @@ const FileUploader = ({ fileSetter, file }: Props) => {
     }
 
     try {
-      console.log(url);
+      const reader = new FileReader();
       const res = await axios.get(url);
-      console.log(res);
       if (res.status === 200) {
-        const imageBlob = await res.blob();
-        fileSetter({
-          fileName: 'Uploaded via image URL',
-          imageData: URL.createObjectURL(imageBlob),
-          newImageData: {
-            contrast: 0,
-            text: { len: 0, good: 0 },
-            newImage: '',
-            palette: '',
-          },
-        });
-        toast.success('URL received successfully! Starting analysis...');
-        let { contrast, text, newImage, palette }: ImgData = await fetchImageAnalysis(
-          file.imageData,
-          file.fileName
-        );
-        fileSetter({
-          fileName: file.fileName,
-          imageData: file.imageData,
-          newImageData: {
-            contrast,
-            text,
-            newImage,
-            palette,
-          },
-        });
+        // if FileReader aborts
+        reader.onabort = (err) => {
+          console.error(err);
+          toast.error('File reading was aborted.');
+        };
+        // if FileReader errors while reading
+        reader.onerror = (err) => {
+          console.error(err);
+          toast.error('File reading has failed.');
+        };
+        // once FileReader is done reading file contents
+        reader.onloadend = async () => {
+          const dataURL: string = typeof reader.result === 'string' ? reader.result : '';
+          console.log(dataURL);
+          fileSetter({
+            fileName: 'ImageUrl',
+            imageData: dataURL,
+            newImageData: {
+              contrast: 0,
+              text: { len: 0, good: 0 },
+              newImage: '',
+              palette: '',
+            },
+          });
+          toast.success('URL received successfully! Starting analysis...');
+          let { contrast, text, newImage, palette }: ImgData = await fetchImageAnalysis(
+            dataURL,
+            'ImageUrl'
+          );
+          fileSetter({
+            fileName: file.fileName,
+            imageData: file.imageData,
+            newImageData: {
+              contrast,
+              text,
+              newImage,
+              palette,
+            },
+          });
+        };
+        reader.readAsDataURL(new Blob([res.data]));
       }
     } catch (err) {
       toast.error('Something went wrong when grabbing the image.');
@@ -125,7 +139,7 @@ const FileUploader = ({ fileSetter, file }: Props) => {
 
   return (
     <>
-      <div className="flex flex-row justify-between items-center p-4 w-full h-full rounded-md border-gray-400 border-dashed border-[1px]">
+      <div className="flex flex-row justify-between items-center p-4 mb-4 w-full h-full rounded-md border-gray-400 border-dashed border-[1px]">
         <div className="flex flex-row items-center">
           <input
             type="file"

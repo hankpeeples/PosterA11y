@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { UploadedFile } from '../utils/types';
 import ExplanationCard from './ExplanationCard';
 import FileUploader from './FileUploader';
@@ -20,13 +20,13 @@ const Home = () => {
     },
   });
 
-  useEffect(() => {}, [file]);
-
   return (
-    <div className="grid gap-4 m-4">
-      <FileUploader fileSetter={setFile} file={file} />
-      <ScoreCard text={file.newImageData.text} contrast={file.newImageData.contrast} />
-      <div className="flex flex-row">
+    <div className="m-4">
+      <div className="flex flex-col">
+        <FileUploader fileSetter={setFile} file={file} />
+        <ScoreCard text={file.newImageData.text} contrast={file.newImageData.contrast} />
+      </div>
+      <div className="flex flex-row h-[50rem]">
         <NewImageDisplay image={file.newImageData.newImage} palette={file.newImageData.palette} />
         <ExplanationCard />
       </div>

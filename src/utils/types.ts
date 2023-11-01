@@ -9,7 +9,7 @@ export type ImgData = {
 };
 
 export type UploadedFile = {
-  fileName: string | null;
+  fileName: string;
   imageData: string;
   newImageData: ImgData;
 };

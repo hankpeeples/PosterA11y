@@ -1,9 +1,6 @@
 import type { ImgData } from './types';
 
-export const fetchImageAnalysis = async (
-  image: string,
-  fileName: string | null
-): Promise<ImgData> => {
+export const fetchImageAnalysis = async (image: string, fileName: string): Promise<ImgData> => {
   return new Promise(async (resolve, reject) => {
     try {
       let res = await fetch('http://localhost:3001/api/v1/analyze', {
