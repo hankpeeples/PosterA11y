@@ -87,7 +87,7 @@ const FileUploader = ({ fileSetter, file }: Props) => {
 
     try {
       const reader = new FileReader();
-      const res = await axios.get(url);
+      const res = await fetch(url);
       if (res.status === 200) {
         // if FileReader aborts
         reader.onabort = (err) => {
@@ -129,7 +129,7 @@ const FileUploader = ({ fileSetter, file }: Props) => {
             },
           });
         };
-        reader.readAsDataURL(new Blob([res.data]));
+        reader.readAsDataURL(await res.blob());
       }
     } catch (err) {
       toast.error('Something went wrong when grabbing the image.');
