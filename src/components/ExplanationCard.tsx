@@ -20,6 +20,11 @@ const ExplanationCard = () => {
             amount. On the other hand, red boxes that are drawn around text means you may want to
             make some changes to how that text is displayed (font size, color, font family, etc...).
           </p>
+          <p className="pt-4">
+            If some text has no box outline at all, then that text was not able to be read by the
+            application. The text parser is far from perfect and will miss some text but this is not
+            counted against your score.
+          </p>
         </div>
       </div>
       <div className="p-4">
@@ -38,6 +43,11 @@ const ExplanationCard = () => {
             but this is taken into account when grading.
           </p>
         </div>
+      </div>
+      <div className="p-4">
+        <strong>Note:</strong> The resulting image seen to the left may appear very blurry. This is
+        simply because of the size of the image and how it is scaled to fit the page and has nothing
+        to do with the actual image quality.
       </div>
     </div>
   );
