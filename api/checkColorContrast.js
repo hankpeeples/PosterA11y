@@ -38,7 +38,9 @@ const checkContrast = async (path) => {
 
             await generateColorPalette(colors);
 
-            resolve((pass / (cLen * 2 - 1)) * 100);
+            let score = (pass / (cLen * 2 - 1)) * 100;
+            if (score > 100) score = 100;
+            resolve(score);
           } catch (err) {
             console.log('color contrast inner fun:', err);
             reject(err);
