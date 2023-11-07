@@ -1,6 +1,6 @@
 {
-  "name": "template-vite-react-ts-tailwind-v3",
-  "version": "0.8.0",
+  "name": "PosterA11y",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
