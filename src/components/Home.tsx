@@ -7,7 +7,7 @@ import ScoreCard from './ScoreCard';
 
 const Home = () => {
   const [file, setFile] = useState<UploadedFile>({
-    fileName: null,
+    fileName: '',
     imageData: '',
     newImageData: {
       contrast: 0,
@@ -21,7 +21,7 @@ const Home = () => {
   });
 
   return (
-    <div className="m-4">
+    <div className="m-4 mr-auto ml-auto max-w-[1600px]">
       <div className="flex flex-col">
         <FileUploader fileSetter={setFile} file={file} />
         <ScoreCard text={file.newImageData.text} contrast={file.newImageData.contrast} />
