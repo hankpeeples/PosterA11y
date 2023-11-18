@@ -5,20 +5,15 @@ type Props = {
 
 const NewImageDisplay = ({ image, palette }: Props) => {
   return (
-    <div className="flex flex-row justify-center items-center mr-4 w-full h-full">
+    <div className="mr-4 flex h-full w-full flex-row items-center justify-center">
       {image && (
-        <>
-          <div className="flex w-3/4 h-full">
-            <img src={image} className="flex w-full h-full" />
-          </div>
-          <div className="flex flex-col justify-center items-center w-1/4 h-full font-bold text-gray-900">
-            <p className="mb-12">Color Palette</p>
-            <img
-              src={palette}
-              className="flex h-[15%] w-full rotate-90 rounded-md border-[2px] border-solid border-black"
-            />
-          </div>
-        </>
+        <div className="flex h-full w-full flex-col">
+          <img src={image} className="flex h-full w-full pb-2" />
+          <img
+            src={palette}
+            className="flex h-[5%] w-full rounded-md border-[2px] border-solid border-black"
+          />
+        </div>
       )}
     </div>
   );

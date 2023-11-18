@@ -3,9 +3,11 @@ import Navbar from './components/Navbar';
 
 function App() {
   return (
-    <main className=" block h-screen w-screen bg-[#f5f5f5] text-black">
+    <main className="block h-screen w-screen bg-[#f5f5f5] text-black">
       <Navbar />
-      <Home />
+      <div className="pr-4 pl-4">
+        <Home />
+      </div>
     </main>
   );
 }

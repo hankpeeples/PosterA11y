@@ -22,13 +22,10 @@ const Home = () => {
 
   return (
     <div className="m-4 mr-auto ml-auto max-w-[1600px]">
-      <div className="flex flex-col">
-        <FileUploader fileSetter={setFile} file={file} />
-        <ScoreCard text={file.newImageData.text} contrast={file.newImageData.contrast} />
-      </div>
+      <FileUploader fileSetter={setFile} file={file} />
       <div className="flex flex-row h-[50rem]">
+        <ScoreCard text={file.newImageData.text} contrast={file.newImageData.contrast} />
         <NewImageDisplay image={file.newImageData.newImage} palette={file.newImageData.palette} />
-        <ExplanationCard />
       </div>
     </div>
   );
