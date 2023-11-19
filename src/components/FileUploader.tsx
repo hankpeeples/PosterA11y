@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosHeaders } from 'axios';
 import { useCallback, useRef, useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -50,6 +50,7 @@ const FileUploader = ({ fileSetter, file }: Props) => {
             newImage: '',
             palette: '',
           },
+          loading: true,
         });
         toast.success('File uploaded successfully! Starting analysis...');
         let { contrast, text, newImage, palette }: ImgData = await fetchImageAnalysis(
@@ -65,6 +66,7 @@ const FileUploader = ({ fileSetter, file }: Props) => {
             newImage,
             palette,
           },
+          loading: false,
         });
       } else {
         console.error('dataURL is null, unable to load');
@@ -86,8 +88,12 @@ const FileUploader = ({ fileSetter, file }: Props) => {
     }
 
     try {
+      let newUrl = url;
+      if (url.charAt(4) === 's') {
+        newUrl = url.substring(0, 4) + url.substring(5, url.length);
+      }
       const reader = new FileReader();
-      const res = await fetch(url);
+      const res = await fetch(newUrl);
       if (res.status === 200) {
         // if FileReader aborts
         reader.onabort = (err) => {
@@ -112,6 +118,7 @@ const FileUploader = ({ fileSetter, file }: Props) => {
               newImage: '',
               palette: '',
             },
+            loading: true,
           });
           toast.success('URL received successfully! Starting analysis...');
           let { contrast, text, newImage, palette }: ImgData = await fetchImageAnalysis(
@@ -127,6 +134,7 @@ const FileUploader = ({ fileSetter, file }: Props) => {
               newImage,
               palette,
             },
+            loading: false,
           });
         };
         reader.readAsDataURL(await res.blob());
@@ -139,7 +147,7 @@ const FileUploader = ({ fileSetter, file }: Props) => {
 
   return (
     <>
-      <div className="flex flex-row justify-between items-center p-4 mb-4 w-full h-full rounded-md border-gray-400 border-dashed border-[1px]">
+      <div className="mb-4 flex h-full w-full flex-row items-center justify-between rounded-md border-[1px] border-dashed border-gray-400 p-4">
         <div className="flex flex-row items-center">
           <input
             type="file"
@@ -151,7 +159,7 @@ const FileUploader = ({ fileSetter, file }: Props) => {
           />
           <button
             onClick={runFileUpload}
-            className="pt-1 pr-2 pb-1 pl-2 rounded-md border-black shadow-sm transition duration-200 ease-in-out hover:shadow-none border-[1px] shadow-black"
+            className="rounded-md border-[1px] border-black pb-1 pl-2 pr-2 pt-1 shadow-sm shadow-black transition duration-200 ease-in-out hover:shadow-none"
           >
             Choose image...
           </button>
@@ -165,11 +173,11 @@ const FileUploader = ({ fileSetter, file }: Props) => {
             type="url"
             name="image url uploader"
             onChange={(e) => setUrl(e.target.value)}
-            className="pt-1 pr-2 pb-1 pl-2 rounded-md rounded-tr-none rounded-br-none border-black shadow-sm transition duration-200 ease-in-out w-[30rem] border-[1px] border-r-transparent shadow-black"
+            className="w-[30rem] rounded-md rounded-br-none rounded-tr-none border-[1px] border-black border-r-transparent pb-1 pl-2 pr-2 pt-1 shadow-sm shadow-black transition duration-200 ease-in-out"
           />
           <button
             onClick={urlInputHandler}
-            className="pt-1 pr-2 pb-1 pl-2 font-bold text-gray-500 bg-white rounded-md rounded-tl-none rounded-bl-none border-black shadow-sm transition duration-200 ease-in-out border-[1px] border-l-transparent shadow-black"
+            className="rounded-md rounded-bl-none rounded-tl-none border-[1px] border-black border-l-transparent bg-white pb-1 pl-2 pr-2 pt-1 font-bold text-gray-500 shadow-sm shadow-black transition duration-200 ease-in-out"
           >
             Go
           </button>

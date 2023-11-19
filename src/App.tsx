@@ -3,9 +3,9 @@ import Navbar from './components/Navbar';
 
 function App() {
   return (
-    <main className="block h-screen w-screen bg-[#f5f5f5] text-black">
+    <main className="flex h-full w-screen flex-col text-black">
       <Navbar />
-      <div className="pr-4 pl-4">
+      <div className="pl-4 pr-4">
         <Home />
       </div>
     </main>

@@ -12,4 +12,5 @@ export type UploadedFile = {
   fileName: string;
   imageData: string;
   newImageData: ImgData;
+  loading: boolean;
 };

@@ -1,9 +1,9 @@
 const ExplanationCard = () => {
   return (
     <div className="flex h-full w-full flex-col rounded-md bg-gray-300 p-4 shadow-md shadow-[#898989]">
-      <h2 className="font-bold text-black text-[1.5rem]">Noteable Info</h2>
+      <h2 className="text-[1.5rem] font-bold text-black">Noteable Info</h2>
       <div className="p-4">
-        <h3 className="font-semibold underline text-[1.1rem]">Text Grading</h3>
+        <h3 className="text-[1.1rem] font-semibold underline">Text Grading</h3>
         <div className="pl-4">
           <p>
             <span className="text-red-600">Red</span> boxes around an area show that the text within
@@ -28,7 +28,7 @@ const ExplanationCard = () => {
         </div>
       </div>
       <div className="p-4">
-        <h3 className="font-semibold underline text-[1.1rem]">Contrast Grading</h3>
+        <h3 className="text-[1.1rem] font-semibold underline">Contrast Grading</h3>
         <div className="pl-4">
           <p>
             The color contrast of the image is graded by making sure the colors are{' '}
@@ -45,9 +45,9 @@ const ExplanationCard = () => {
         </div>
       </div>
       <div className="p-4">
-        <strong>Note:</strong> The resulting image seen to the left may appear very blurry. This is
-        simply because of the size of the image and how it is scaled to fit the page and has nothing
-        to do with the actual image quality.
+        <strong>Note:</strong> The resulting image may appear blurry. This is simply because of the
+        size of the image and how it is scaled to fit the page and has nothing to do with the actual
+        image quality.
       </div>
     </div>
   );

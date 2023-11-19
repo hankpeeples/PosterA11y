@@ -23,7 +23,7 @@ const ScoreCard = (scores: ScoreData) => {
     <div className="mb-4 flex h-fit w-full flex-col items-center rounded-md border-[1px] p-4">
       <h2 className="text-[1.5rem] font-bold text-black">Overall Score</h2>
       <ScorePie overall={overall} />
-      <div className="flex flex-row items-center justify-around">
+      <div className="flex flex-row items-center justify-around gap-36">
         <div className="flex flex-col items-center justify-center text-lg font-bold">
           <p>Text</p>
           <ScorePie textScore={text} />
